@@ -99,4 +99,3 @@ gg_bacmapTaxon = ggplot(df_bacmap, aes(x=taxon, y=pct)) +
 pdf(file="figures/Figure6c_boxplots.pdf", width=7.5, height=3)
 gg_bacmapTaxon
 dev.off()
-```
