@@ -1,6 +1,4 @@
 # Dependencies
-
-```{r, message=F}
 library(ggplot2)
 library(dplyr)
 library(tidyr)
@@ -11,9 +9,7 @@ library(ggbeeswarm)
 library(reshape2)
 library(cowplot)
 library(ggpubr)
-```
 
-```{r}
 theme_linedraw2 = theme_linedraw() + theme(strip.background=element_rect(fill="grey80", colour="grey50", size=0.2), strip.text.x=element_text(colour="black"), strip.text.y=element_text(colour="black"))
 theme_jon = theme_linedraw2 + 
   theme(legend.position="bottom", 
@@ -37,19 +33,16 @@ ihs <- function(x) {
   y <- log(x + sqrt(x ^ 2 + 1))
   return(y)
 }
-```
 
 # Per-region Coverage comparisons
 
-```{r}
+## Create data matrix
 df = read.csv("tables/ucsc-coverage.csv")
 df$locus = paste0(df$chr, "_", df$start, "_", df$end)
 df = df[, c("context", "sample", "locus", "cov")]
 df = separate(df, col = "sample", sep="_", into=c("platform","lab","genome","rep"), remove=F)
-```
 
-
-```{r, fig.width=12, fig.height=5}
+## Plot
 gg_covWithSig = ggplot(df, aes(x=platform, y=ihs(cov))) +
   geom_violin(aes(fill=platform, alpha=0.85), show.legend=F) +
   theme_jon + theme(axis.title.y = element_text(size=12)) +
@@ -59,16 +52,15 @@ gg_covWithSig = ggplot(df, aes(x=platform, y=ihs(cov))) +
   scale_fill_manual(values=platform.colors) +
   stat_compare_means(method="wilcox.test", ref.group=".all.", label="p.signif", method.args = list(alternative = "greater"), hide.ns=T, size=3, label.y = 5.5) +
   facet_wrap(~context, nrow=2, labeller = labeller(context = context.labels)) 
-gg_covWithSig
-```
-```{r}
+
+
+## Export
 pdf(file="figures/Fig2a_CovIHS_v2.pdf", width=7.5, height=5)
 gg_covWithSig
 dev.off()
-```
 
-```{r}
-# create matrix of A versus B, pct of sites that A has better coverage than B
+
+## Create matrix of A versus B, pct of sites that A has better coverage than B
 contexts = c("Alu", "L1", "L2", "lowcomplexity", "LTR", "satellite", "simplerepeat")
 platforms = c("HiSeq2500", "HiSeq4000", "HiSeqX10", "BGISEQ500", "MGISEQ2000", "NovaSeq2x150", "NovaSeq2x250", "PacBio", "PromethION")
 ava_matrix_all = data.frame()
@@ -102,10 +94,8 @@ for(context in contexts){
   ava_matrix_all = rbind(ava_matrix_all, ava_matrix_m)
 }
 ava_matrix_all$barColor = ifelse(ava_matrix_all$value >= 0.5, "greater", "lesser")
-ava_matrix_all
-```
 
-```{r, fig.width=11, fig.height=8}
+## Plot
 gg_avaCovAll = ggplot(ava_matrix_all, aes(x=Sample2, y=value)) +
   geom_bar(stat="identity", aes(fill=barColor, color=barColor), width = 1, show.legend = F) + 
   geom_hline(yintercept = 0.5, linetype="dashed", alpha=0.5) +
@@ -122,15 +112,13 @@ gg_avaCovAll = ggplot(ava_matrix_all, aes(x=Sample2, y=value)) +
   xlab("") + ylab("") +
   coord_flip() +
   facet_grid(context~Sample1, labeller = labeller(context = context.labels)) 
-gg_avaCovAll
-```
-```{r}
+
+## Export
 pdf(file="figures/Supp__CovAVA.pdf", width=11, height=8)
 gg_avaCovAll
 dev.off()
-```
 
-```{r, fig.width=7.5, fig.height=3}
+## Plot all vs all
 gg_avaCov = ggplot(ava_matrix_all, aes(x=context, y=value)) +
   geom_point(aes(fill=barColor), shape=21, show.legend = F, size=3, alpha=0.85) +
   geom_hline(yintercept = 0.5, linetype="dashed", alpha=0.5) +
@@ -139,24 +127,21 @@ gg_avaCov = ggplot(ava_matrix_all, aes(x=context, y=value)) +
   xlab("") + ylab("") +
   coord_flip() +
   facet_wrap(~Sample1, nrow=1)#, labeller = labeller(context = context.labels))
-gg_avaCov
-```
 
-```{r}
+## Export
 pdf(file="figures/Fig2b_CovAVA_v2.pdf", width=7.5, height=5)
 gg_avaCov
 dev.off()
-```
 
 # Coefficient of Coverage
 
-```{r}
+## Set up matrix
 df_cv = df %>% group_by(context, platform, locus) %>% summarise(coeffvar = sd(cov,na.rm=TRUE) / mean(cov,na.rm=TRUE))
 df$platform = factor(df$platform, levels=c("HiSeq2500", "HiSeq4000", "HiSeqX10", "NovaSeq2x150", "NovaSeq2x250", "BGISEQ500", "MGISEQ2000", "PacBio", "PromethION"))
 df_cv$platform = factor(df_cv$platform, levels=c("HiSeq2500", "HiSeq4000", "HiSeqX10", "NovaSeq2x150", "NovaSeq2x250", "BGISEQ500", "MGISEQ2000", "PacBio", "PromethION"))
 df_cv
-```
-```{r, fig.width=7.5, fig.height=5}
+
+## Plot
 gg_covCV = ggplot(subset(df_cv), aes(x=platform, y=coeffvar)) +
   geom_boxplot(aes(fill=platform), outlier.shape = NA, show.legend=F) +
   theme_jon +
@@ -166,10 +151,8 @@ gg_covCV = ggplot(subset(df_cv), aes(x=platform, y=coeffvar)) +
   coord_trans(ylim=c(0,0.7)) +
   stat_compare_means(method="wilcox.test", ref.group=".all.", label="p.signif", method.args = list(alternative = "greater"), hide.ns=T, size=3, label.y = 5.5) +
   facet_wrap(.~context, nrow=2, labeller = labeller(context = context.labels)) 
-gg_covCV
-```
-```{r}
+
+## Export
 pdf(file="figures/Fig2c_CovCV_v2.pdf", width=7.5, height=5)
 gg_covCV
 dev.off()
-```
