@@ -1,4 +1,3 @@
-#!/bin/bash -l
 #SBATCH --cpus-per-task=1
 #SBATCH --time=168:00:00   # HH/MM/SS
 #SBATCH --mem=16GB
