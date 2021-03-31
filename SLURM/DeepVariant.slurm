@@ -1,4 +1,3 @@
-#!/bin/bash -l
 #SBATCH --time=168:00:00
 #SBATCH --mem=32GB
 #SBATCH --cpus-per-task=8
