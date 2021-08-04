@@ -6,24 +6,23 @@
 #SBATCH --output=logs/NGS2_sen_%A_%a.log
 source ~/.bashrc
 
-echo [`date] Started job
+echo [`date`] Started job
 
 ### sentieon parameters and bwa
-export SENTIEON_LICENSE=abclic01.med.cornell.edu:8990 
-export SENTIEON_INSTALL_DIR=/home/jfoox/programs/sentieon-genomics-202010/bin/sentieon
-export PATH=$PATH:/home/jfoox/programs/sentieon-genomics-202010/bin
+export SENTIEON_LICENSE=/path/to/license/server
+export SENTIEON_INSTALL_DIR=/path/to/sentieon/bin/sentieon
+export PATH=$PATH:/path/to/sentieon/bin
 export bwt_max_mem=48G
 
 ### metadata and refs
-outdir=/athena/masonlab/scratch/projects/abrf_ngs_phaseii/revision/sentieon/outs
-#rsync -av /athena/masonlab/scratch/projects/abrf_ngs_phaseii/revision/reference/GCA_000001405.15_GRCh38_no_alt_plus_hs38d1_analysis_set.fna $TMPDIR
-#rsync -av /athena/masonlab/scratch/projects/abrf_ngs_phaseii/revision/reference/GCA_000001405.15_GRCh38_no_alt_plus_hs38d1_analysis_set.fna.fai $TMPDIR
-rsync -av /athena/masonlab/scratch/projects/abrf_ngs_phaseii/revision/reference/00-All.vcf.gz* $TMPDIR
+rsync -av reference/00-All.vcf.gz* $TMPDIR
+rsync -av reference/GCA_000001405.15_GRCh38_no_alt_plus_hs38d1_analysis_set.fna* $TMPDIR
 reference=GCA_000001405.15_GRCh38_no_alt_plus_hs38d1_analysis_set.fna
 samplesheet=$1
 fastqR1_path=$(cat $samplesheet | sed -n "${SLURM_ARRAY_TASK_ID}p")
 fastqR1=$(basename $fastqR1_path)
 sample=$(echo $fastqR1 | cut -d'.' -f1)
+outdir=$2
 
 # account for single/paired end reactions
 if [ -f ${fastqR1_path/.R1/.R2} ]; then fastqR2_path=${fastqR1_path/.R1/.R2}; else fastqR2_path=''; fi
