@@ -2,13 +2,10 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --time=168:00:00
 #SBATCH --mem=32GB
-#SBATCH --job-name=NGS2_rtg-ucsc
-#SBATCH --output=logs/NGS2_rtg-ucsc.SAMPLE.%A_%a.log
 
-# this script was lightly modified to be run in CLINVAR genes, OMIM genes, exomic regions, etc.
+# this script can be modified to be run in CLINVAR genes, OMIM genes, exomic regions, etc.
 # below is code for analysis in UCSC RepeatMasker regions
 
-source ~/.bashrc
 echo [`date`] Started job
 
 samplefile=$1

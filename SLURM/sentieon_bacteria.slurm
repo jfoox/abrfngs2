@@ -2,21 +2,18 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --time=168:00:00
 #SBATCH --mem=32GB
-#SBATCH --job-name=NGS2_BactSen
-#SBATCH --output=logs/NGS2_BactSen_%A_%a.log
 
-source ~/.bashrc
 echo [`date`] Started job
 
 ### sentieon parameters and bwa
-export SENTIEON_LICENSE=abclic01.med.cornell.edu:8990 
-export SENTIEON_INSTALL_DIR=/home/jfoox/programs/sentieon-genomics-202010/bin/sentieon
-export PATH=$PATH:/home/jfoox/programs/sentieon-genomics-202010/bin
-export bwt_max_mem=12G
+export SENTIEON_LICENSE=/path/to/license/server
+export SENTIEON_INSTALL_DIR=/path/to/sentieon/bin/sentieon
+export PATH=$PATH:/path/to/sentieon/bin
+export bwt_max_mem=32G
 
 ### metadata and refs
-outdir=/athena/masonlab/scratch/projects/abrf_ngs_phaseii/revision/bacteria/sentieon/outs
 samplesheet=$1
+outdir=$2
 fastqR1_path=$(cat $samplesheet | sed -n "${SLURM_ARRAY_TASK_ID}p" | cut -d'@' -f1)
 fastqR1=$(basename $fastqR1_path)
 sample=$(echo $fastqR1 | cut -d'.' -f1)
@@ -88,4 +85,3 @@ if [ ! -f ${outdir}/${sample}.vcf ]; then
 fi
 
 echo [`date`] "Finished job"
-
