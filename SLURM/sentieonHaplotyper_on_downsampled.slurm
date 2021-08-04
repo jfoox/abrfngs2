@@ -1,25 +1,21 @@
 #!/bin/bash -l
 #SBATCH --cpus-per-task=4
-#SBATCH --time=168:00:00   # HH/MM/SS
+#SBATCH --time=168:00:00
 #SBATCH --mem=32GB
-#SBATCH --job-name=NGS2_DS_sentieon
-#SBATCH --output=logs/NGS2_DS_sentieon.SAMPLE.%A_%a.log
 
 # run Sentieon Haplotyper on downsampled BAMs
 
-source ~/.bashrc
 echo [`date`] Started job
 
 ### sentieon parameters and bwa
-export SENTIEON_LICENSE=abclic01.med.cornell.edu:8990 
-export SENTIEON_INSTALL_DIR=/home/jfoox/programs/sentieon-genomics-202010/bin/sentieon
-export PATH=$PATH:/home/jfoox/programs/sentieon-genomics-202010/bin
+export SENTIEON_LICENSE=/path/to/license/server
+export SENTIEON_INSTALL_DIR=/path/to/sentieon/bin/sentieon
+export PATH=$PATH:/path/to/sentieon/bin
 export bwt_max_mem=48G
 
-rsync -av /athena/masonlab/scratch/projects/abrf_ngs_phaseii/revision/reference/00-All.vcf.gz* $TMPDIR
-rsync -av /athena/masonlab/scratch/projects/abrf_ngs_phaseii/revision/reference/resources_broad_hg38_v0_Homo_sapiens_assembly38.known_indels.filtered.vcf.gz* $TMPDIR
+rsync -av reference/00-All.vcf.gz* $TMPDIR
+rsync -av reference/resources_broad_hg38_v0_Homo_sapiens_assembly38.known_indels.filtered.vcf.gz* $TMPDIR
 knownsites=resources_broad_hg38_v0_Homo_sapiens_assembly38.known_indels.filtered.vcf.gz
-outdir=/athena/masonlab/scratch/projects/abrf_ngs_phaseii/revision/downsample/outs
 
 ### get BAM
 samplesheet=$1
@@ -27,9 +23,10 @@ bam_path=$(cat $samplesheet | sed -n "${SLURM_ARRAY_TASK_ID}p")
 rsync -av $bam_path* $TMPDIR
 bam=$(basename $bam_path)
 sample=$(echo $bam | cut -d'.' -f1)
-reference_path=/athena/masonlab/scratch/projects/abrf_ngs_phaseii/revision/reference/GCA_000001405.15_GRCh38_no_alt_plus_hs38d1_analysis_set.fna
+reference_path=reference/GCA_000001405.15_GRCh38_no_alt_plus_hs38d1_analysis_set.fna
 rsync -av $reference_path* $TMPDIR
 reference=$(basename $reference_path)
+outdir=$2 # state which output directory you want
 cd $TMPDIR
 
 
