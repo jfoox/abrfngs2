@@ -3,6 +3,21 @@
 ## Introduction 
 Analysis and figure generation code for the ABRF NGS Phase II Study on DNA-seq reproducibility. This repository includes scripts to run heavy lifting such as alignment and variant calling (SLURM), shell scripts to do post-processing calculations (bin), and R scripts used to create figures (Rmds).
 
+## Requirements
+
+* [BBMap](https://jgi.doe.gov/data-and-tools/bbtools/bb-tools-user-guide/bbmap-guide/)
+* [bedtools](https://bedtools.readthedocs.io/en/latest/index.html)
+* DeepVariant (see [`Quick Start Documentation`](https://github.com/google/deepvariant/blob/r1.1/docs/deepvariant-quick-start.md)) 
+* [FASTQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
+* [GATK4](https://gatk.broadinstitute.org/hc/en-us/articles/360036194592-Getting-started-with-GATK4)
+* Guppy (see documentation on [Nanopore Community page](https://nanoporetech.com/))
+* [minimap2](https://github.com/lh3/minimap2)
+* [Picard](https://broadinstitute.github.io/picard/)
+* [RTG Tools](https://github.com/RealTimeGenomics/rtg-tools)
+* [samtools](https://github.com/samtools/samtools)
+* [Sentieon](https://www.sentieon.com/)
+* [Strelka2](https://github.com/Illumina/strelka)
+
 ## Reference materials
 This study requires several resources in the `reference` directory. Included in this repo:
 1. GRCh38 reference genome [`GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz`](ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/000/001/405/GCA_000001405.15_GRCh38/seqs_for_alignment_pipelines.ucsc_ids/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz)

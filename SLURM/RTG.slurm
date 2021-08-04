@@ -9,24 +9,24 @@
 echo [`date`] Started job
 
 samplefile=$1
+outdir=$2
 sample=$(cat $samplefile | sed -n "${SLURM_ARRAY_TASK_ID}p")
-dsdir=/athena/masonlab/scratch/projects/abrf_ngs_phaseii/revision/downsample/outs
-outdir=/athena/masonlab/scratch/projects/abrf_ngs_phaseii/revision/rtg/outs
+dsdir=downsample/outs
 
 # setup
-rsync -avr /athena/masonlab/scratch/projects/abrf_ngs_phaseii/revision/reference/GCA_000001405.15_SDF $TMPDIR
+rsync -avr reference/GCA_000001405.15_SDF $TMPDIR
 reference=GCA_000001405.15_GRCh38_no_alt_plus_hs38d1_analysis_set.fna
 
 # get proper reference
 if [[ $sample == *"Mother"* ]]; then 
-  truthfile_path=/athena/masonlab/scratch/projects/abrf_ngs_phaseii/revision/reference/HG004_GRCh38_1_22_v4.2.1_benchmark.vcf.gz
-  bedfile_path=/athena/masonlab/scratch/projects/abrf_ngs_phaseii/revision/reference/HG004_GRCh38_1_22_v4.2.1_benchmark_noinconsistent.bed
+  truthfile_path=reference/HG004_GRCh38_1_22_v4.2.1_benchmark.vcf.gz
+  bedfile_path=reference/HG004_GRCh38_1_22_v4.2.1_benchmark_noinconsistent.bed
 elif [[ $sample == *"Father"* ]]; then
-  truthfile_path=/athena/masonlab/scratch/projects/abrf_ngs_phaseii/revision/reference/HG003_GRCh38_1_22_v4.2.1_benchmark.vcf.gz
-  bedfile_path=/athena/masonlab/scratch/projects/abrf_ngs_phaseii/revision/reference/HG003_GRCh38_1_22_v4.2.1_benchmark_noinconsistent.bed
+  truthfile_path=reference/HG003_GRCh38_1_22_v4.2.1_benchmark.vcf.gz
+  bedfile_path=reference/HG003_GRCh38_1_22_v4.2.1_benchmark_noinconsistent.bed
 elif [[ $sample == *"Son"* ]]; then
-  truthfile_path=/athena/masonlab/scratch/projects/abrf_ngs_phaseii/revision/reference/HG002_GRCh38_1_22_v4.2.1_benchmark.vcf.gz
-  bedfile_path=/athena/masonlab/scratch/projects/abrf_ngs_phaseii/revision/reference/HG002_GRCh38_1_22_v4.2.1_benchmark_noinconsistent.bed
+  truthfile_path=reference/HG002_GRCh38_1_22_v4.2.1_benchmark.vcf.gz
+  bedfile_path=reference/HG002_GRCh38_1_22_v4.2.1_benchmark_noinconsistent.bed
 fi
 rsync -av $truthfile_path* $TMPDIR
 truthfile=$(basename $truthfile_path)
@@ -42,7 +42,7 @@ fi
 rsync -avL ${dsdir}/${queryfile}* $TMPDIR
 
 # run through all UCSC RepeatMasker contexts
-rsync -av /athena/masonlab/scratch/projects/abrf_ngs_phaseii/revision/reference/ucsc/*.bed $TMPDIR
+rsync -av reference/ucsc/*.bed $TMPDIR
 for ucscbed in ucsc.*.bed; do
   context=$(echo $ucscbed | cut -d'.' -f2)
   echo [`date`] $context

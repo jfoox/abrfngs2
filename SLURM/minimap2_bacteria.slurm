@@ -2,14 +2,10 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --time=168:00:00
 #SBATCH --mem=32GB
-#SBATCH --job-name=NGS2_BactSen_ONT
-#SBATCH --output=logs/NGS2_BactSen_ONT_%A_%a.log
 
-source ~/.bashrc
 echo [`date`] Started job
 
 ### metadata and refs
-outdir=/athena/masonlab/scratch/projects/abrf_ngs_phaseii/revision/bacteria/minimap2/outs
 samplesheet=$1
 fastqR1_path=$(cat $samplesheet | sed -n "${SLURM_ARRAY_TASK_ID}p" | cut -d'@' -f1)
 fastqR1=$(basename $fastqR1_path)
@@ -17,6 +13,7 @@ sample=$(echo $fastqR1 | cut -d'.' -f1)
 reference_path=$(cat $samplesheet | sed -n "${SLURM_ARRAY_TASK_ID}p" | cut -d'@' -f2)
 rsync -av $reference_path* $TMPDIR
 reference=$(basename $reference_path)
+outdir=$2
 
 echo "/////////////////////////////////////////////////"
 echo "This job's sample is:      " $sample
