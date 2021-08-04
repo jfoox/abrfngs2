@@ -1,11 +1,8 @@
 #!/bin/bash -l
 #SBATCH --cpus-per-task=1
-#SBATCH --time=168:00:00   # HH/MM/SS
+#SBATCH --time=168:00:00
 #SBATCH --mem=16GB
-#SBATCH --job-name=NGS2_mismatch-ucsc
-#SBATCH --output=logs/NGS2_mismatch-ucsc.SAMPLE.%A_%a.log
 
-source ~/.bashrc
 echo [`date`] Started job
 
 ### get BAM and BEDs
@@ -14,10 +11,11 @@ bam_path=$(cat $samplesheet | sed -n "${SLURM_ARRAY_TASK_ID}p")
 rsync -avL $bam_path* $TMPDIR
 bam=$(basename $bam_path)
 sample=$(echo $bam | cut -d'.' -f1)
-rsync -av /athena/masonlab/scratch/projects/abrf_ngs_phaseii/revision/reference/GCA_000001405.15_GRCh38_no_alt_plus_hs38d1_analysis_set.fna $TMPDIR
-outdir=/athena/masonlab/scratch/projects/abrf_ngs_phaseii/revision/error/outs
+rsync -av reference/GCA_000001405.15_GRCh38_no_alt_plus_hs38d1_analysis_set.fna $TMPDIR
 ref=GCA_000001405.15_GRCh38_no_alt_plus_hs38d1_analysis_set.fna
+outdir=$2
 cd $TMPDIR
+
 
 ### loop through GC bins
 for num in $(seq 0.00 0.05 1.00); do
