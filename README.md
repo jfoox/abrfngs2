@@ -1,4 +1,5 @@
-# ABRF NGS Phase II
+# Multi-platform assessment of DNA sequencing performance in the ABRF Next-Generation Sequencing Study
+
 
 ## Introduction 
 Analysis and figure generation code for the ABRF NGS Phase II Study on DNA-seq reproducibility. This repository includes scripts to run heavy lifting such as alignment and variant calling (SLURM), shell scripts to do post-processing calculations (bin), and R scripts used to create figures (Rmds).
@@ -7,7 +8,7 @@ Analysis and figure generation code for the ABRF NGS Phase II Study on DNA-seq r
 
 * [BBMap](https://jgi.doe.gov/data-and-tools/bbtools/bb-tools-user-guide/bbmap-guide/)
 * [bedtools](https://bedtools.readthedocs.io/en/latest/index.html)
-* DeepVariant (see [`Quick Start Documentation`](https://github.com/google/deepvariant/blob/r1.1/docs/deepvariant-quick-start.md)) 
+* [DeepVariant](https://github.com/google/deepvariant/blob/r1.1/docs/deepvariant-quick-start.md)
 * [FASTQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
 * [GATK4](https://gatk.broadinstitute.org/hc/en-us/articles/360036194592-Getting-started-with-GATK4)
 * Guppy (see documentation on [Nanopore Community page](https://nanoporetech.com/))
