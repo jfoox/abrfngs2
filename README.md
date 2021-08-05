@@ -87,4 +87,4 @@ Please see XXX for publication.
 
 The genome sequences in this study are available as EBV-immortalized B-lymphocyte cell lines (from Coriell) as well as from DNA (from Coriell and NIST). All data generated within this study from these genomes are publicly available on NCBI Sequence Read Archive (SRA) under the BioProject PRJNA646948, within accessions SRR12898279-12898354. 
 
-You can cite our work as follows: <tk>
+You can cite our work as follows: [tk]
